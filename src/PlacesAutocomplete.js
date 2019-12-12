@@ -105,7 +105,7 @@ class PlacesAutocomplete extends React.Component {
       this.autocompleteService.getPlacePredictions(
         {
           ...this.props.searchOptions,
-          sessionToken: '1',
+          sessionToken: window.google.maps.places.AutocompleteSessionToken(),
           input: value,
         },
         this.autocompleteCallback
