@@ -15,6 +15,7 @@ const formattedSuggestion = structured_formatting => ({
   secondaryText: structured_formatting.secondary_text,
 });
 
+
 class PlacesAutocomplete extends React.Component {
   constructor(props) {
     super(props);
@@ -24,6 +25,7 @@ class PlacesAutocomplete extends React.Component {
       suggestions: [],
       userInputValue: props.value,
       ready: !props.googleCallbackName,
+      sessionToken: null
     };
 
     this.debouncedFetchPredictions = debounce(
@@ -34,6 +36,7 @@ class PlacesAutocomplete extends React.Component {
 
   componentDidMount() {
     const { googleCallbackName } = this.props;
+
     if (googleCallbackName) {
       if (!window.google) {
         window[googleCallbackName] = this.init;
@@ -67,11 +70,13 @@ class PlacesAutocomplete extends React.Component {
 
     this.autocompleteService = new window.google.maps.places.AutocompleteService();
     this.autocompleteOK = window.google.maps.places.PlacesServiceStatus.OK;
+    const sessionToken = new window.google.maps.places.AutocompleteSessionToken();
+
     this.setState(state => {
       if (state.ready) {
         return null;
       } else {
-        return { ready: true };
+        return { ready: true, sessionToken };
       }
     });
   };
@@ -105,7 +110,7 @@ class PlacesAutocomplete extends React.Component {
       this.autocompleteService.getPlacePredictions(
         {
           ...this.props.searchOptions,
-          sessionToken: window.google.maps.places.AutocompleteSessionToken(),
+          sessionToken: this.state.sessionToken,
           input: value,
         },
         this.autocompleteCallback
@@ -376,8 +381,7 @@ PlacesAutocomplete.propTypes = {
     location: PropTypes.object,
     offset: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     radius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    types: PropTypes.array,
-    sessionToken: PropTypes.string,
+    types: PropTypes.array
   }),
   debounce: PropTypes.number,
   highlightFirstSuggestion: PropTypes.bool,
