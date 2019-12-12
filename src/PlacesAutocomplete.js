@@ -105,6 +105,7 @@ class PlacesAutocomplete extends React.Component {
       this.autocompleteService.getPlacePredictions(
         {
           ...this.props.searchOptions,
+          sessionToken: '1',
           input: value,
         },
         this.autocompleteCallback
@@ -376,6 +377,7 @@ PlacesAutocomplete.propTypes = {
     offset: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     radius: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     types: PropTypes.array,
+    sessionToken: PropTypes.string,
   }),
   debounce: PropTypes.number,
   highlightFirstSuggestion: PropTypes.bool,
